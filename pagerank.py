@@ -46,7 +46,7 @@ def crawl(directory):
         )
 
     return pages
-
+#
 
 def transition_model(corpus, page, damping_factor):
     """
