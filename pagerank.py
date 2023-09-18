@@ -58,12 +58,10 @@ def transition_model(corpus, page, damping_factor):
     a link at random chosen from all pages in the corpus.
     """
 
-    i = 0
+    #page_links = corpus[page]
+    #if len(page_links) == 0:
+    #    page_links = list(corpus.keys())
 
-    transition_dict = dict()
-    for corpus_key in corpus.keys():
-        i += 1
-        transition_dict[corpus_key] = 0.85 * ()
 
     raise NotImplementedError
 
@@ -83,32 +81,38 @@ def sample_pagerank(corpus, damping_factor, n):
         results[page] = 0
     i = 0
     choices = list(corpus.keys())
-    print(choices)
+    last_page = None
     while i < n:
-        print(choices)
-        random.seed()
-        i += 1
-        choice = random.choice(choices)
-        page_links = corpus[choice]
-        results[choice] = results[choice] + 1
+        if len(choices) != 0:
+            print(choices)
+            random.seed()
+            i += 1
+            choice = random.choice(choices)
+            results[choice] = results[choice] + 1
+            #page_links = corpus[choice]
 
         random.seed()
         digits = int(str(damping_factor)[::-1].find('.'))
         r = random.randint(0, 10 * digits)
-
+        
         # Damping Factor
-        if r <= (damping_factor * 10 * digits):
-            damping_choice = random.choice(corpus.keys())
-            results[damping_choice] = results[damping_choice] + 1
+        if r >= (damping_factor * 10 * digits):
+            #damping_choice = random.choice(list(corpus.keys()))
+            #results[damping_choice] = results[damping_choice] + 1
+            choices = list(corpus.keys())
             continue
         else:
-            choices = corpus[choice]
+            if len(choices) == 0:
+                continue
+            print("choices:")
+            print(corpus[choice])
+            choices = list(corpus[choice])
 
     PageRanks = dict()
     for result in results:
         key = result
-        value = result[key]
-        PageRanks[key] = n / value
+        value = results[key]
+        PageRanks[key] = value / n
     return PageRanks
 
     
