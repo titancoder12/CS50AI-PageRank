@@ -89,35 +89,21 @@ def sample_pagerank(corpus, damping_factor, n):
     results = dict()
     for page in corpus:
         results[page] = 0
-    i = 0
+    i = 1
     choices = list(corpus.keys())
-    #last_page = None
+    page = random.choice(choices)
+    results[page] = results[page] + 1
     while i < n:
-        if len(choices) != 0:
-            print(choices)
-            random.seed()
-            i += 1
-            choice = random.choice(choices)
-            results[choice] = results[choice] + 1
-            transition_model(corpus, choice, damping_factor)
-            #page_links = corpus[choice]
+        i += 1
+        print(i)
+        t = transition_model(corpus, page, damping_factor)
+        t_choices = list(t.keys())
+        t_weights = list(t.values())
+        choice = random.choices(t_choices, weights=t_weights)[0]
 
-        random.seed()
-        digits = int(str(damping_factor)[::-1].find('.'))
-        r = random.randint(0, 10 * digits)
+        page = choice
+        results[page] = results[page] + 1
         
-        # Damping Factor
-        if r >= (damping_factor * 10 * digits):
-            #damping_choice = random.choice(list(corpus.keys()))
-            #results[damping_choice] = results[damping_choice] + 1
-            choices = list(corpus.keys())
-            continue
-        else:
-            if len(choices) == 0:
-                continue
-            print("choices:")
-            print(corpus[choice])
-            choices = list(corpus[choice])
 
     PageRanks = dict()
     for result in results:
