@@ -63,16 +63,16 @@ def transition_model(corpus, page, damping_factor):
     if len(page_links) == 0:
         page_links = set(corpus.keys())
     damping_factor_rate = (1 - damping_factor) / len(corpus.keys())
-    print(damping_factor_rate)
+    #print(damping_factor_rate)
     for page in set(corpus.keys()):
         if page in page_links:
             distribution[page] = (1 / len(page_links)) * damping_factor + damping_factor_rate
         else:
             distribution[page] = damping_factor_rate
     
-    print("distribution:")
-    print(distribution)
-    print()
+    #print("distribution:")
+    #print(distribution)
+    #print()
     return distribution
 
 
@@ -95,7 +95,6 @@ def sample_pagerank(corpus, damping_factor, n):
     results[page] = results[page] + 1
     while i < n:
         i += 1
-        print(i)
         t = transition_model(corpus, page, damping_factor)
         t_choices = list(t.keys())
         t_weights = list(t.values())
@@ -111,12 +110,7 @@ def sample_pagerank(corpus, damping_factor, n):
         value = results[key]
         PageRanks[key] = value / n
     return PageRanks
-
     
-
-
-
-
 def iterate_pagerank(corpus, damping_factor):
     """
     Return PageRank values for each page by iteratively updating
@@ -126,7 +120,39 @@ def iterate_pagerank(corpus, damping_factor):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+    pages = list(corpus.keys())
+    PageRank = dict()
+    for page in pages:
+        PageRank[page] = 1 / len(pages)
+
+    converge = True
+    i = 0 
+    while converge:
+        i += 1
+        c_PageRank = PageRank.copy()
+        #print(f"pages: {pages}")
+        for page in pages:
+            #print(f"{page}")
+            sum = 0
+            print(sum)
+            for page_s in pages:
+                sum += (c_PageRank[page_s]) / len(corpus[page_s])
+                print(sum)
+            pagerank_p = ((1 - damping_factor) / len(pages)) + (sum * damping_factor)
+            PageRank[page] = pagerank_p
+            #print(PageRank)
+        
+        converges = 0
+        for page in list(c_PageRank.keys()):
+            if (((c_PageRank[page] - PageRank[page]) <= 0.001) and ((c_PageRank[page] - PageRank[page]) >= 0)) or ((PageRank[page] - c_PageRank[page] <= 0.001) and (PageRank[page] - c_PageRank[page] <= 0)):
+                print(c_PageRank[page] - PageRank[page])
+                converges += 1
+                #print(converge)
+                #continue
+        if converges == len(corpus.keys()) and i != 1:
+            converge = False
+            continue
+    return PageRank
 
 
 if __name__ == "__main__":
