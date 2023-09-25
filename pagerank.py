@@ -127,31 +127,42 @@ def iterate_pagerank(corpus, damping_factor):
 
     converge = True
     i = 0 
+    c_PageRank = PageRank.copy()
     while converge:
         i += 1
         c_PageRank = PageRank.copy()
         #print(f"pages: {pages}")
         for page in pages:
             #print(f"{page}")
-            sum = 0
-            print(sum)
+            total = 0
+            #print(len(pages))
             for page_s in pages:
-                sum += (c_PageRank[page_s]) / len(corpus[page_s])
-                print(sum)
-            pagerank_p = ((1 - damping_factor) / len(pages)) + (sum * damping_factor)
+                if page in corpus[page_s]:
+                    if len(corpus[page_s]) == 0:
+                        length = len(list(corpus.keys()))
+                    else:
+                        length = len(corpus[page_s])
+                    #print(c_PageRank[page_s])
+                    total += (c_PageRank[page_s]) / length #len(corpus[page_s])
+                    #print(total)
+            pagerank_p = ((1 - damping_factor) / len(pages)) + (total * damping_factor)
             PageRank[page] = pagerank_p
             #print(PageRank)
         
         converges = 0
         for page in list(c_PageRank.keys()):
-            if (((c_PageRank[page] - PageRank[page]) <= 0.001) and ((c_PageRank[page] - PageRank[page]) >= 0)) or ((PageRank[page] - c_PageRank[page] <= 0.001) and (PageRank[page] - c_PageRank[page] <= 0)):
-                print(c_PageRank[page] - PageRank[page])
+            if abs(c_PageRank[page] - PageRank[page]) <= 0.001:
+                #print("reached")
+                #print(c_PageRank[page] - PageRank[page])
                 converges += 1
                 #print(converge)
                 #continue
-        if converges == len(corpus.keys()) and i != 1:
+        if converges == len(corpus.keys()): #and i != 1:
             converge = False
-            continue
+            break
+            # continue
+            
+        c_PageRank = PageRank.copy()
     return PageRank
 
 
