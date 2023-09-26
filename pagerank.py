@@ -137,10 +137,16 @@ def iterate_pagerank(corpus, damping_factor):
             total = 0
             #print(len(pages))
             for page_s in pages:
+                if page in corpus[page_s]:
                     length = len(corpus[page_s])
                     #print(c_PageRank[page_s])
                     total += (c_PageRank[page_s]) / length #len(corpus[page_s])
                     #print(total)
+                elif len(list(corpus[page_s])) == 0:
+                    length = len(list(corpus.keys()))
+                    total += (c_PageRank[page_s]) / length
+
+
             pagerank_p = ((1 - damping_factor) / len(pages)) + (total * damping_factor)
             PageRank[page] = pagerank_p
             #print(PageRank)
@@ -156,7 +162,7 @@ def iterate_pagerank(corpus, damping_factor):
         if converges == len(corpus.keys()): #and i != 1:
             converge = False
             break
-            # continue
+            #continue
             
         c_PageRank = PageRank.copy()
     return PageRank
