@@ -164,7 +164,12 @@ def iterate_pagerank(corpus, damping_factor):
             break
             #continue
             
-        c_PageRank = PageRank.copy()
+    c_PageRank = PageRank.copy()
+    total_p = 0
+    for key in PageRank.keys():
+        total_p = total_p + PageRank[key]
+    #print(total_p)
+
     return PageRank
 
 
